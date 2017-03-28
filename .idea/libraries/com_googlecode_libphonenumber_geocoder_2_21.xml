@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.googlecode.libphonenumber:geocoder:2.21" type="repository">
+    <properties maven-id="com.googlecode.libphonenumber:geocoder:2.21" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/libphonenumber/geocoder/2.21/geocoder-2.21.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/libphonenumber/libphonenumber/7.0.5/libphonenumber-7.0.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/libphonenumber/prefixmapper/2.21/prefixmapper-2.21.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
