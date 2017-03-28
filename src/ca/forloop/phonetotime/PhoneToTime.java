@@ -46,10 +46,11 @@ public class PhoneToTime {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-        System.out.println(numberObject.getCountryCode());
+
         if (phoneUtil.isValidNumber(numberObject)) {
-            System.out.println(numberObject.hasItalianLeadingZero());
+
             if (!numberObject.hasItalianLeadingZero()) {
+
                 try {
                     List<String> map2 = mapper.getTimeZonesForNumber(numberObject);
                     if (map2.size() == 1) {
