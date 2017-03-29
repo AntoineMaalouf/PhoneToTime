@@ -15,26 +15,12 @@ public class PhoneToTime {
 
     private final String ERROR = "ERROR";
     private final String LOCAL_NUMBER = "LOCAL NUMBER";
-    private PhoneNumberUtil mPhoneUtil = PhoneNumberUtil.getInstance();
-
-
-    //public static String localTimeZone() {
-    //      return TimeZone.getDefault().getID();
-    // }
-
-    //  public static ZoneId localTimeZoneId() {
-    //      return ZoneId.of(localTimeZone());
-    //  }
-
-    //public static ZonedDateTime overseasTime(ZoneId timeZone) {
-    //    return ZonedDateTime.now().withZoneSameInstant(timeZone);
-    //}
+    private final PhoneNumberUtil mPhoneUtil = PhoneNumberUtil.getInstance();
 
     private static ZonedDateTime overseasTime(String timeZone) {
         return ZonedDateTime.now().withZoneSameInstant(ZoneId.of(timeZone));
     }
-
-
+    
     public String timeAtPhone(String number) {
 
         String interNumber = isPhoneInternational(number);
