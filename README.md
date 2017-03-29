@@ -1,1 +1,3 @@
-Simple java library to get the time at a destination phone number
+Phone To Time
+
+Takes phone number and returns the time in the timezone this number is based
