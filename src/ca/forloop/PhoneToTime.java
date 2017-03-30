@@ -1,56 +1,63 @@
 package ca.forloop;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberToTimeZonesMapper;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
+        import com.google.i18n.phonenumbers.NumberParseException;
+        import com.google.i18n.phonenumbers.PhoneNumberToTimeZonesMapper;
+        import com.google.i18n.phonenumbers.PhoneNumberUtil;
+        import com.google.i18n.phonenumbers.Phonenumber;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.zone.ZoneRulesException;
-import java.util.List;
+        import java.time.ZoneId;
+        import java.time.ZonedDateTime;
+        import java.time.format.DateTimeFormatter;
+        import java.time.zone.ZoneRulesException;
+        import java.util.List;
 
 public class PhoneToTime {
 
-    private final String ERROR = "ERROR";
-    private final String LOCAL_NUMBER = "LOCAL NUMBER";
-    private final PhoneNumberUtil mPhoneUtil = PhoneNumberUtil.getInstance();
 
-    private static ZonedDateTime overseasTime(String timeZone) {
+    private final PhoneNumberUtil mPhoneUtil = PhoneNumberUtil.getInstance();
+    private Phonenumber.PhoneNumber numberObject;
+
+
+
+    public PhoneToTime(String stringNumber) {
+        this.numberObject = getNumberObject(stringNumber);
+    }
+
+    private ZonedDateTime overseasTime(String timeZone) {
         return ZonedDateTime.now().withZoneSameInstant(ZoneId.of(timeZone));
     }
-    
-    public String timeAtPhone(String number) {
 
+    private Phonenumber.PhoneNumber getNumberObject(String number) {
         String interNumber = isPhoneInternational(number);
-
-        if (!(interNumber.equals(ERROR) || interNumber.equals(LOCAL_NUMBER))) {
-
-            Phonenumber.PhoneNumber numberObject = parseNumber(interNumber);
-
-            PhoneNumberToTimeZonesMapper mapper = PhoneNumberToTimeZonesMapper.getInstance();
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-
-            try {
-                List<String> map2 = mapper.getTimeZonesForNumber(numberObject);
-                if (map2.size() == 1) {
-                    String phoneTimeZone = map2.get(0);
-                    return overseasTime(phoneTimeZone).format(formatter) + " * " + phoneTimeZone
-                            + " * " + mPhoneUtil.getRegionCodeForNumber(numberObject);
-                } else {
-                    String multiple = multipleZones(numberObject, map2);
-                    return overseasTime(multiple).format(formatter) + " " + multiple
-                            + " * " + mPhoneUtil.getRegionCodeForNumber(numberObject);
-                }
-            } catch (NullPointerException | ZoneRulesException e) {
-                e.printStackTrace();
-                return ERROR;
-            }
-        } else return interNumber;
+        if (interNumber!=null) {
+            return parseNumber(interNumber);
+        } else return null;
     }
 
+    public String getCountryId() {
+        return mPhoneUtil.getRegionCodeForNumber(numberObject);
+    }
+
+    public String getTimeZone() {
+        PhoneNumberToTimeZonesMapper mapper = PhoneNumberToTimeZonesMapper.getInstance();
+        List<String> map2 = mapper.getTimeZonesForNumber(numberObject);
+
+        if (map2.size() == 1) {
+            return map2.get(0);
+        } else {
+            return multipleZones(numberObject, map2);
+        }
+    }
+
+    String getTime() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+        try {
+            return overseasTime(getTimeZone()).format(formatter);
+        } catch (NullPointerException | ZoneRulesException e) {
+            return null;
+        }
+    }
 
     private Phonenumber.PhoneNumber parseNumber(String phoneNumber) {
         Phonenumber.PhoneNumber parsedNumber = null;
@@ -80,21 +87,21 @@ public class PhoneToTime {
         if (number.indexOf("+") == 0) {
             if (isNumeric(number.substring(1))) {
                 return number;
-            } else return ERROR;
+            } else return null;
 
 
         } else if (number.indexOf("0011") == 0) {
             if (isNumeric(number)) {
                 return "+" + number.substring(4);
-            } else return ERROR;
+            } else return null;
 
         } else if (number.indexOf("00") == 0) {
             if (isNumeric(number)) {
                 return "+" + number.substring(2);
-            } else return "ERROR1";
+            } else return null;
 
         } else {
-            return LOCAL_NUMBER;
+            return null;
         }
     }
 
