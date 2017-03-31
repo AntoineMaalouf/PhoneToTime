@@ -1,35 +1,36 @@
 package ca.forloop;
 
-        import com.google.i18n.phonenumbers.NumberParseException;
-        import com.google.i18n.phonenumbers.PhoneNumberToTimeZonesMapper;
-        import com.google.i18n.phonenumbers.PhoneNumberUtil;
-        import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberToTimeZonesMapper;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
-        import java.time.ZoneId;
-        import java.time.ZonedDateTime;
-        import java.time.format.DateTimeFormatter;
-        import java.time.zone.ZoneRulesException;
-        import java.util.List;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.zone.ZoneRulesException;
+
+import java.util.List;
+import java.util.Locale;
+
 
 public class PhoneToTime {
 
 
     private final PhoneNumberUtil mPhoneUtil = PhoneNumberUtil.getInstance();
     private Phonenumber.PhoneNumber numberObject;
+    private boolean nanp;
 
 
-
-    public PhoneToTime(String stringNumber) {
+    public PhoneToTime(String stringNumber, boolean nanp) {
         this.numberObject = getNumberObject(stringNumber);
+        this.nanp = nanp;
     }
 
-    private ZonedDateTime overseasTime(String timeZone) {
-        return ZonedDateTime.now().withZoneSameInstant(ZoneId.of(timeZone));
-    }
 
     private Phonenumber.PhoneNumber getNumberObject(String number) {
         String interNumber = isPhoneInternational(number);
-        if (interNumber!=null) {
+        if (interNumber != null) {
             return parseNumber(interNumber);
         } else return null;
     }
@@ -49,14 +50,20 @@ public class PhoneToTime {
         }
     }
 
-    String getTime() {
+    public String getTime() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
         try {
-            return overseasTime(getTimeZone()).format(formatter);
+            return ZonedDateTime.now().withZoneSameInstant(ZoneId.of(getTimeZone()))
+                    .format(formatter);
         } catch (NullPointerException | ZoneRulesException e) {
             return null;
         }
+    }
+
+    public String getCountryName(){
+        Locale locale = new Locale("", getCountryId());
+        return locale.getDisplayName();
     }
 
     private Phonenumber.PhoneNumber parseNumber(String phoneNumber) {

@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.googlecode.libphonenumber:geocoder:2.67" level="project" />
+    <orderEntry type="library" name="com.jakewharton.threetenabp:threetenabp:1.0.5" level="project" />
   </component>
 </module>
